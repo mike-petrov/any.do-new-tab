@@ -1,0 +1,113 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    font-style: normal;
+    background: #f6f6f6;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.card {
+    box-shadow: 0 2px 15px 0 rgb(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background: #fff;
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: #4a4a4a;
+}
+
+.title_group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card_form {
+    display: flex;
+    flex-direction: column;
+}
+
+.card_title {
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: #4a4a4a;
+}
+
+form input {
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #898989;
+    padding: 8px 16px;
+    background: #fff;
+    font-size: 20px;
+    outline: 0;
+}
+
+.btn {
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #0080ff;
+    height: 44px;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 18px;
+    outline: 0px;
+    text-align: center;
+    border: 0px;
+    border-radius: 5px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.task_item {
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 8px 16px;
+    border: 1px solid #e7e7e7;
+}
+
+.task_item:hover {
+    border-color: #0080ff;
+}
+
+::-webkit-input-placeholder {
+    color: #dadada;
+    font-weight: 300;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+}
+
+::-moz-placeholder {
+    color: #dadada;
+    font-weight: 300;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+}
+
+:-ms-input-placeholder {
+    color: #dadada;
+    font-weight: 300;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+}
+
+:-moz-placeholder {
+    color: #dadada;
+    font-weight: 300;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+}
