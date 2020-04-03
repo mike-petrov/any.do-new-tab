@@ -13,8 +13,10 @@ package-lock.json
 
 # Prod Bundle
 /build
+/dist
 
 .vscode
 .idea
 
-set.js
+# MacOs
+.DS_Store
