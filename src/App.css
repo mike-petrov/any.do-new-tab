@@ -115,6 +115,9 @@ a {
     margin: 10px;
     min-width: 400px;
     max-width: 500px;
+}
+
+.page .card {
     min-height: 500px;
     max-height: 600px;
 }
