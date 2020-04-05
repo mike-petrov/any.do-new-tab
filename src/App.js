@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 import { authUser, tasksSync } from './functions/api';
 import './App.css';
+import svgAdd from './img/add.svg';
+import svgClose from './img/close.svg';
+import svgLogo from './img/logo.svg';
+import svgSettings from './img/settings.svg';
+import svgSync from './img/sync.svg';
 
 const App = () => {
 	const [loader, setLoader] = useState(true);
@@ -79,7 +84,7 @@ const App = () => {
 								<div className="popup_title title_group">
 									<span>Settings</span>
 									<span className="popup_close" onClick={() => { onPopup(); }}>
-										<img src="./img/close.svg" alt="close" />
+										<img src={svgClose} alt="close" />
 									</span>
 								</div>
 								<div className="setting_block">
@@ -102,7 +107,7 @@ const App = () => {
 			{loader && (
 				<div id="loader">
 					<div className="loader_inner">
-						<img src="./img/favicon.svg" alt="loader" />
+						<img src={svgLogo} alt="loader" />
 					</div>
 				</div>
 			)}
@@ -140,10 +145,10 @@ const App = () => {
 						<div className="title_header">{`Hello, ${user.displayName}!`}</div>
 						<div className="btns_group">
 							<div className="btn_icon" onClick={() => { onSync(); }}>
-								<img src="./img/sync.svg" alt="sync" />
+								<img src={svgSync} alt="sync" />
 							</div>
 							<div className="btn_icon" onClick={() => { onPopup(true, 'settings'); }}>
-								<img src="./img/settings.svg" alt="settings" />
+								<img src={svgSettings} alt="settings" />
 							</div>
 						</div>
 					</div>
@@ -157,7 +162,7 @@ const App = () => {
 											<span className="tasks_count">{tasks.length}</span>
 										</div>
 										<div>
-											<img className="btn_add" src="./img/add.svg" alt="add" />
+											<img className="btn_add" src={svgAdd} alt="add" />
 										</div>
 									</div>
 									<div className="card_content">
@@ -182,7 +187,7 @@ const App = () => {
 											</span>
 										</div>
 										<div>
-											<img className="btn_add" src="./img/add.svg" alt="add" />
+											<img className="btn_add" src={svgAdd} alt="add" />
 										</div>
 									</div>
 									<div className="card_content">
@@ -207,7 +212,7 @@ const App = () => {
 											</span>
 										</div>
 										<div>
-											<img className="btn_add" src="./img/add.svg" alt="add" />
+											<img className="btn_add" src={svgAdd} alt="add" />
 										</div>
 									</div>
 									<div className="card_content">
