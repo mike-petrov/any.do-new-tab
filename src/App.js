@@ -1,31 +1,238 @@
 import React, { useState, useEffect } from 'react';
 
-import { authUser } from './functions/api';
-import { credential } from './set';
+import { authUser, tasksSync } from './functions/api';
+import './App.css';
 
 const App = () => {
-	const [api, setApi] = useState('');
+	const [loader, setLoader] = useState(true);
+	const [popup, setPopup] = useState({ active: false, current: null });
+	const [formAuth, setFormAuth] = useState({ email: '', password: '' });
 	const [user, setUser] = useState({});
+	const [tasks, setTasks] = useState([]);
+	const [params, setParams] = useState({ columns: ['All', 'Today', 'Someday'] });
+
+	const onSync = () => {
+		tasksSync(JSON.parse(localStorage.getItem('user')).auth_token).then((e) => {
+			setTasks(e.models.task.items);
+		});
+	};
 
 	useEffect(() => {
-		if (Object.keys(user).length !== 0) {
-			api.sync().then((e) => {
-				console.log(e);
-			});
+		if (localStorage.getItem('user')) {
+			setUser(JSON.parse(localStorage.getItem('user')));
+			onSync();
 		}
-		goAuth(credential.email, credential.password);
+
+		if (localStorage.getItem('params')) {
+			setParams(JSON.parse(localStorage.getItem('params')));
+		}
 	}, []);
 
-	const goAuth = (email, password) => {
-		authUser({ email, password }).then((e) => {
-			console.log(e);
-			setApi(e);
-		})
+	useEffect(() => {
+		if (tasks.length !== 0 || !localStorage.getItem('user')) {
+			setLoader(false);
+		}
+		console.log(tasks);
+	}, [tasks]);
+
+	const onAuth = (e) => {
+		authUser(formAuth).then((eventAuthUser) => {
+			setUser(eventAuthUser);
+			localStorage.setItem('user', JSON.stringify(eventAuthUser));
+			onSync();
+		});
+		e.preventDefault();
+	};
+
+	const onPopup = (active = false, current = null) => {
+		setPopup({ active, current });
+	};
+
+	const onHandleAuth = (e) => {
+		if (e.target.name === 'email') {
+			setFormAuth({ ...formAuth, email: e.target.value });
+		} else if (e.target.name === 'password') {
+			setFormAuth({ ...formAuth, password: e.target.value });
+		}
+	};
+
+	const onHandleColumns = (column) => {
+		const position = params.columns.indexOf(column);
+		let { columns } = params;
+		if (position === -1) {
+			columns = columns.concat(column);
+		} else {
+			columns.splice(position, 1);
+		}
+		setParams({ ...params, columns });
+		localStorage.setItem('params', JSON.stringify({ ...params, columns }));
 	};
 
 	return (
-		<div>1</div>
+		<>
+			{popup.active && (
+				<>
+					{popup.current === 'settings' && (
+						<div className="popup">
+							<div className="popup_close_panel" onClick={() => { onPopup(); }} />
+							<div className="popup_content">
+								<div className="popup_title title_group">
+									<span>Settings</span>
+									<span className="popup_close" onClick={() => { onPopup(); }}>
+										<img src="./img/close.svg" alt="close" />
+									</span>
+								</div>
+								<div className="setting_block">
+									{['All', 'Today', 'Someday'].map((item) => (
+										<div
+											key={item}
+											role="menuitem"
+											className={params.columns.indexOf(item) === -1 ? '' : 'active'}
+											onClick={() => { onHandleColumns(item); }}
+										>
+											{item}
+										</div>
+									))}
+								</div>
+							</div>
+						</div>
+					)}
+				</>
+			)}
+			{loader && (
+				<div id="loader">
+					<div className="loader_inner">
+						<img src="./img/favicon.svg" alt="loader" />
+					</div>
+				</div>
+			)}
+			{Object.keys(user).length === 0 ? (
+				<div className="container">
+					<div className="card">
+						<div className="card_title">Welcome</div>
+						<form className="card_form" onSubmit={onAuth}>
+							<input
+								type="mail"
+								name="email"
+								placeholder="your@email.com"
+								value={formAuth.email}
+								onChange={onHandleAuth}
+							/>
+							<input
+								type="password"
+								name="password"
+								placeholder="Password"
+								value={formAuth.password}
+								onChange={onHandleAuth}
+							/>
+							<input
+								type="submit"
+								className="btn"
+								value="Sign in"
+							/>
+							<a href="https://desktop.any.do/" className="form_bottom">Create account</a>
+						</form>
+					</div>
+				</div>
+			) : (
+				<div className="page">
+					<div className="header">
+						<div className="title_header">{`Hello, ${user.displayName}!`}</div>
+						<div className="btns_group">
+							<div className="btn_icon" onClick={() => { onSync(); }}>
+								<img src="./img/sync.svg" alt="sync" />
+							</div>
+							<div className="btn_icon" onClick={() => { onPopup(true, 'settings'); }}>
+								<img src="./img/settings.svg" alt="settings" />
+							</div>
+						</div>
+					</div>
+					<div className="content">
+						<div className="cards_group">
+							{params.columns.indexOf('All') !== -1 && (
+								<div className="card">
+									<div className="card_title title_group">
+										<div className="title_group">
+											<span>All</span>
+											<span className="tasks_count">{tasks.length}</span>
+										</div>
+										<div>
+											<img className="btn_add" src="./img/add.svg" alt="add" />
+										</div>
+									</div>
+									<div className="card_content">
+										{tasks.length !== 0 && tasks.map((task) => (
+											<div
+												key={task.id}
+												className="task_item"
+											>
+												{task.title}
+											</div>
+										))}
+									</div>
+								</div>
+							)}
+							{params.columns.indexOf('Someday') !== -1 && (
+								<div className="card">
+									<div className="card_title title_group">
+										<div className="title_group">
+											<span>Someday</span>
+											<span className="tasks_count">
+												{tasks !== 0 && tasks.filter((task) => task.dueDate && new Date(task.dueDate).toDateString() !== new Date().toDateString()).length}
+											</span>
+										</div>
+										<div>
+											<img className="btn_add" src="./img/add.svg" alt="add" />
+										</div>
+									</div>
+									<div className="card_content">
+										{tasks.length !== 0 && tasks.map((task) => (task.dueDate && new Date(task.dueDate).toDateString() !== new Date().toDateString() && (
+											<div
+												key={task.id}
+												className="task_item"
+											>
+												{task.title}
+											</div>
+										)))}
+									</div>
+								</div>
+							)}
+							{params.columns.indexOf('Today') !== -1 && (
+								<div className="card">
+									<div className="card_title title_group">
+										<div className="title_group">
+											<span>Today</span>
+											<span className="tasks_count">
+												{tasks !== 0 && tasks.filter((task) => new Date(task.dueDate).toDateString() === new Date().toDateString()).length}
+											</span>
+										</div>
+										<div>
+											<img className="btn_add" src="./img/add.svg" alt="add" />
+										</div>
+									</div>
+									<div className="card_content">
+										{tasks.length !== 0 && tasks.map((task) => (new Date(task.dueDate).toDateString() === new Date().toDateString() && (
+											<div
+												key={task.id}
+												className="task_item"
+											>
+												{task.title}
+											</div>
+										)))}
+									</div>
+								</div>
+							)}
+						</div>
+					</div>
+					<div className="footer">
+						<div className="author_block">
+							<a href="https://mikepetrov.ru/">Author</a>
+						</div>
+					</div>
+				</div>
+			)}
+		</>
 	);
-}
+};
 
 export default App;

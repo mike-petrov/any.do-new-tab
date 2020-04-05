@@ -7,13 +7,86 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-.card {
-    box-shadow: 0 2px 15px 0 rgb(0, 0, 0, 0.1);
-    border-radius: 5px;
-    background: #fff;
-    padding: 20px;
-    max-height: 500px;
-    overflow-y: scroll;
+a {
+    text-decoration: none;
+}
+
+#loader {
+    background: none repeat scroll 0 0 #f0f4f7;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 9999;
+}
+
+.loader_inner {
+    position: absolute;
+    left: calc(50% - 50px);
+    top: calc(50% - 50px);
+}
+
+.loader_inner img {
+    width: 100px;
+    height: 100px;
+    animation: pulse 3s linear infinite;
+}
+
+@keyframes pulse {
+    0% {
+        -moz-transform: scale(1, 1);
+        -ms-transform: scale(1, 1);
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1);
+    }
+
+    50% {
+        -moz-transform: scale(1.1, 1.1);
+        -ms-transform: scale(1.1, 1.1);
+        -webkit-transform: scale(1.1, 1.1);
+        transform: scale(1.1, 1.1);
+    }
+
+    100% {
+        -moz-transform: scale(1, 1);
+        -ms-transform: scale(1, 1);
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1);
+    }
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: calc(100vw - 40px);
+    height: calc(100vh - 40px);
+    margin: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title_header {
+    font-size: 28px;
+    font-weight: 500;
+    color: #4a4a4a;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.author_block {
+    font-size: 14px;
+}
+
+.author_block a {
+    color: #9197a3;
 }
 
 .title {
@@ -29,9 +102,35 @@ body {
     justify-content: space-between;
 }
 
+.cards_group {
+    display: flex;
+    overflow-y: hidden;
+}
+
+.card {
+    box-shadow: 0 2px 15px 0 rgb(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background: #fff;
+    padding: 20px;
+    margin: 10px;
+    min-width: 400px;
+    max-width: 500px;
+}
+
+.card_content {
+    overflow-y: scroll;
+    max-height: 450px;
+}
+
 .card_form {
     display: flex;
     flex-direction: column;
+}
+
+.form_bottom {
+    text-align: center;
+    font-size: 14px;
+    color: #d8d8d8;
 }
 
 .card_title {
@@ -64,6 +163,50 @@ form input {
     border-radius: 5px;
 }
 
+.btns_group {
+    display: flex;
+    align-items: center;
+}
+
+.btn_icon {
+    background: #fff;
+    margin: 10px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 10px;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.btn_icon:active {
+    background: #d8d8d8;
+}
+
+.btn_icon img {
+    width: 30px;
+    height: auto;
+}
+
+.btn_add {
+    cursor: pointer;
+}
+
+.tasks_count {
+    background: #9197a3;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 50%;
+    height: 25px;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .container {
     display: flex;
     align-items: center;
@@ -82,6 +225,69 @@ form input {
 
 .task_item:hover {
     border-color: #0080ff;
+}
+
+.setting_block {
+    width: 90%;
+    margin: 20px auto 10px;
+}
+
+.setting_block div {
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 8px 16px;
+    border: 1px solid #e7e7e7;
+}
+
+.setting_block div.active {
+    border-color: #0080ff;
+}
+
+.popup {
+    position: fixed;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.popup_close_panel {
+    position: fixed;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.popup_content {
+    position: absolute;
+    background: #fff;
+    border-radius: 5px;
+    z-index: 101;
+    padding: 20px;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.popup_title {
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: #4a4a4a;
+}
+
+.popup_close {
+    cursor: pointer;
 }
 
 ::-webkit-input-placeholder {
@@ -110,4 +316,11 @@ form input {
     font-weight: 300;
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
+}
+
+@media (max-width: 1250px) {
+    .card {
+        min-width: 300px;
+        max-width: 400px;
+    }
 }
