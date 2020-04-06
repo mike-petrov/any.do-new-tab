@@ -7,6 +7,7 @@ import svgClose from './img/close.svg';
 import svgLogo from './img/logo.svg';
 import svgSettings from './img/settings.svg';
 import svgSync from './img/sync.svg';
+import svgNote from './img/note.svg';
 
 const App = () => {
 	const [loader, setLoader] = useState(true);
@@ -15,11 +16,17 @@ const App = () => {
 	const [user, setUser] = useState({});
 	const [tasks, setTasks] = useState([]);
 	const [params, setParams] = useState({ columns: ['All', 'Today', 'Someday'] });
+	const [note, setNote] = useState('');
+	const [time, setTime] = useState(new Date().toLocaleTimeString().substr(0, 5));
 
 	const onSync = () => {
 		tasksSync(JSON.parse(localStorage.getItem('user')).auth_token).then((e) => {
 			setTasks(e.models.task.items);
 		});
+	};
+
+	const onUpdateTime = () => {
+		setTime(new Date().toLocaleTimeString().substr(0, 5));
 	};
 
 	useEffect(() => {
@@ -31,13 +38,18 @@ const App = () => {
 		if (localStorage.getItem('params')) {
 			setParams(JSON.parse(localStorage.getItem('params')));
 		}
+
+		if (localStorage.getItem('note')) {
+			setNote(localStorage.getItem('note'));
+		}
+
+		setInterval(onUpdateTime, 10000);
 	}, []);
 
 	useEffect(() => {
 		if (tasks.length !== 0 || !localStorage.getItem('user')) {
 			setLoader(false);
 		}
-		console.log(tasks);
 	}, [tasks]);
 
 	const onAuth = (e) => {
@@ -47,6 +59,11 @@ const App = () => {
 			onSync();
 		});
 		e.preventDefault();
+	};
+
+	const onExit = () => {
+		localStorage.removeItem('user');
+		window.location.reload();
 	};
 
 	const onPopup = (active = false, current = null) => {
@@ -73,6 +90,11 @@ const App = () => {
 		localStorage.setItem('params', JSON.stringify({ ...params, columns }));
 	};
 
+	const onHandleNote = (e) => {
+		setNote(e.target.value);
+		localStorage.setItem('note', e.target.value);
+	};
+
 	return (
 		<>
 			{popup.active && (
@@ -87,6 +109,7 @@ const App = () => {
 										<img src={svgClose} alt="close" />
 									</span>
 								</div>
+								<div className="popup_subtitle">Any.do</div>
 								<div className="setting_block">
 									{['All', 'Today', 'Someday'].map((item) => (
 										<div
@@ -99,6 +122,20 @@ const App = () => {
 										</div>
 									))}
 								</div>
+								<div className="popup_subtitle">Advanced</div>
+								<div className="setting_block">
+									{['Notes'].map((item) => (
+										<div
+											key={item}
+											role="menuitem"
+											className={params.columns.indexOf(item) === -1 ? '' : 'active'}
+											onClick={() => { onHandleColumns(item); }}
+										>
+											{item}
+										</div>
+									))}
+								</div>
+								<div className="btn log_out" onClick={onExit}>Log out</div>
 							</div>
 						</div>
 					)}
@@ -144,6 +181,9 @@ const App = () => {
 					<div className="header">
 						<div className="title_header">{`Hello, ${user.displayName}!`}</div>
 						<div className="btns_group">
+							<div className="time_block">
+								{time}
+							</div>
 							<div className="btn_icon" onClick={() => { onSync(); }}>
 								<img src={svgSync} alt="sync" />
 							</div>
@@ -224,6 +264,22 @@ const App = () => {
 												{task.title}
 											</div>
 										)))}
+									</div>
+								</div>
+							)}
+							{params.columns.indexOf('Notes') !== -1 && (
+								<div className="card">
+									<div className="card_title title_group">
+										<span>Notes</span>
+										<span>
+											<img className="btn_add" src={svgNote} style={{ cursor: 'default' }} alt="add" />
+										</span>
+									</div>
+									<div className="card_content">
+										<textarea
+											value={note}
+											onChange={onHandleNote}
+										/>
 									</div>
 								</div>
 							)}
