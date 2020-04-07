@@ -20,8 +20,11 @@ const App = () => {
 	const [time, setTime] = useState(new Date().toLocaleTimeString().substr(0, 5));
 
 	const onSync = () => {
+		setLoader(true);
 		tasksSync(JSON.parse(localStorage.getItem('user')).auth_token).then((e) => {
+			setLoader(false);
 			setTasks(e.models.task.items);
+			localStorage.setItem('tasks', JSON.stringify(e.models.task.items));
 		});
 	};
 
@@ -32,6 +35,11 @@ const App = () => {
 	useEffect(() => {
 		if (localStorage.getItem('user')) {
 			setUser(JSON.parse(localStorage.getItem('user')));
+		}
+
+		if (localStorage.getItem('tasks')) {
+			setTasks(JSON.parse(localStorage.getItem('tasks')));
+		} else {
 			onSync();
 		}
 
@@ -96,7 +104,7 @@ const App = () => {
 	};
 
 	return (
-		<>
+		<>{console.log(tasks)}
 			{popup.active && (
 				<>
 					{popup.current === 'settings' && (
@@ -211,7 +219,10 @@ const App = () => {
 												key={task.id}
 												className="task_item"
 											>
-												{task.title}
+												<input type="checkbox" id={`task${task.id}`} defaultChecked={task.status !== 'UNCHECKED' && 'checked'} />
+												<label htmlFor={`task${task.id}`} data-content={task.title}>
+													{task.title}
+												</label>
 											</div>
 										))}
 									</div>
@@ -236,7 +247,10 @@ const App = () => {
 												key={task.id}
 												className="task_item"
 											>
-												{task.title}
+												<input type="checkbox" id={`task${task.id}`} defaultChecked={task.status !== 'UNCHECKED' && 'checked'} />
+												<label htmlFor={`task${task.id}`} data-content={task.title}>
+													{task.title}
+												</label>
 											</div>
 										)))}
 									</div>
@@ -261,7 +275,10 @@ const App = () => {
 												key={task.id}
 												className="task_item"
 											>
-												{task.title}
+												<input type="checkbox" id={`task${task.id}`} defaultChecked={task.status !== 'UNCHECKED' && 'checked'} />
+												<label htmlFor={`task${task.id}`} data-content={task.title}>
+													{task.title}
+												</label>
 											</div>
 										)))}
 									</div>
