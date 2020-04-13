@@ -51,6 +51,10 @@ const App = () => {
 			setNote(localStorage.getItem('note'));
 		}
 
+		if (new Date().getHours() >= 21 || new Date().getHours() <= 6) {
+			document.querySelector('body').classList.add('dark_theme');
+		}
+
 		setInterval(onUpdateTime, 10000);
 	}, []);
 

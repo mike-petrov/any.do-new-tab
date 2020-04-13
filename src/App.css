@@ -8,6 +8,43 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+body.dark_theme,
+body.dark_theme #loader {
+    background: #222126;
+}
+
+body.dark_theme .card,
+body.dark_theme .btn_icon,
+body.dark_theme textarea,
+body.dark_theme .popup_content {
+    background: #333336 !important;
+    color: #fff;
+}
+
+body.dark_theme .tasks_count {
+    background: #444446 !important;
+}
+
+body.dark_theme .task_item,
+body.dark_theme textarea,
+body.dark_theme .setting_block div {
+    border: 1px solid #444446 !important;
+}
+
+body.dark_theme .setting_block div.active {
+    border-color: #0080ff !important;
+}
+
+body.dark_theme input[type="checkbox"]:checked {
+    background: #555556 !important;
+}
+
+body.dark_theme .card_title,
+body.dark_theme .popup_title,
+body.dark_theme .popup_subtitle {
+    color: #fff;
+}
+
 a {
     text-decoration: none;
 }
@@ -192,7 +229,7 @@ textarea {
     width: 90%;
     font-size: 14px;
     margin: 20px auto 0;
-    background: #ffff;
+    background: transparent;
     color: #e74c3c;
 }
 
