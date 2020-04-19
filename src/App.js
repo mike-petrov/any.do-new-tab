@@ -39,7 +39,7 @@ const App = () => {
 
 		if (localStorage.getItem('tasks')) {
 			setTasks(JSON.parse(localStorage.getItem('tasks')));
-		} else {
+		} else if (localStorage.getItem('user')) {
 			onSync();
 		}
 
