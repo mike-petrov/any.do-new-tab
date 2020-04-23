@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import SimpleMDE from 'react-simplemde-editor';
+import 'easymde/dist/easymde.min.css';
 
 import { authUser, tasksSync } from './functions/api';
 import './App.css';
@@ -8,6 +10,7 @@ import svgLogo from './img/logo.svg';
 import svgSettings from './img/settings.svg';
 import svgSync from './img/sync.svg';
 import svgNote from './img/note.svg';
+
 
 const App = () => {
 	const [loader, setLoader] = useState(true);
@@ -59,7 +62,7 @@ const App = () => {
 	}, []);
 
 	useEffect(() => {
-		if (tasks.length !== 0 || !localStorage.getItem('user')) {
+		if ((tasks && tasks.length !== 0) || !localStorage.getItem('user')) {
 			setLoader(false);
 		}
 	}, [tasks]);
@@ -102,13 +105,19 @@ const App = () => {
 		localStorage.setItem('params', JSON.stringify({ ...params, columns }));
 	};
 
-	const onHandleNote = (e) => {
-		setNote(e.target.value);
-		localStorage.setItem('note', e.target.value);
+	const onHandleNote = (e, type = 'note') => {
+		let value;
+		if (type === 'note') {
+			value = e.target.value;
+		} else {
+			value = e;
+		}
+		setNote(value);
+		localStorage.setItem('note', value);
 	};
 
 	return (
-		<>{console.log(tasks)}
+		<>
 			{popup.active && (
 				<>
 					{popup.current === 'settings' && (
@@ -136,7 +145,7 @@ const App = () => {
 								</div>
 								<div className="popup_subtitle">Advanced</div>
 								<div className="setting_block">
-									{['Notes'].map((item) => (
+									{['Note', 'Markdown'].map((item) => (
 										<div
 											key={item}
 											role="menuitem"
@@ -288,10 +297,10 @@ const App = () => {
 									</div>
 								</div>
 							)}
-							{params.columns.indexOf('Notes') !== -1 && (
+							{params.columns.indexOf('Note') !== -1 && (
 								<div className="card">
 									<div className="card_title title_group">
-										<span>Notes</span>
+										<span>Note</span>
 										<span>
 											<img className="btn_add" src={svgNote} style={{ cursor: 'default' }} alt="add" />
 										</span>
@@ -300,6 +309,25 @@ const App = () => {
 										<textarea
 											value={note}
 											onChange={onHandleNote}
+										/>
+									</div>
+								</div>
+							)}
+							{params.columns.indexOf('Markdown') !== -1 && (
+								<div className="card">
+									<div className="card_title title_group">
+										<span>Markdown</span>
+										<span>
+											<img className="btn_add" src={svgNote} style={{ cursor: 'default' }} alt="add" />
+										</span>
+									</div>
+									<div className="card_content">
+										<SimpleMDE
+											value={note}
+											onChange={(e) => { onHandleNote(e, 'markdown'); }}
+											options={{
+												autofocus: true,
+											}}
 										/>
 									</div>
 								</div>

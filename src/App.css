@@ -192,7 +192,8 @@ form input {
     outline: 0;
 }
 
-textarea {
+textarea,
+.CodeMirror {
     font-size: 14px;
     outline: 0;
     border-radius: 5px;
@@ -200,8 +201,18 @@ textarea {
     padding: 8px 16px;
     border: 1px solid #e7e7e7;
     width: calc(100% - 35px) !important;
-    height: 400px !important;
+    height: 420px !important;
     color: #4a4a4a;
+}
+
+.CodeMirror {
+    width: 100% !important;
+    height: 438px !important;
+}
+
+.editor-toolbar,
+.editor-statusbar {
+    display: none;
 }
 
 .btn {
