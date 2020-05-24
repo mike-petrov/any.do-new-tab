@@ -22,3 +22,5 @@ package-lock.json
 # MacOs
 .DS_Store
 *.pem
+
+sets.js

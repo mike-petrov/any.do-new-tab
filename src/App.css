@@ -10,24 +10,31 @@ body {
 
 body.dark_theme,
 body.dark_theme #loader {
-    background: #222126;
+    background: #222126 !important;
 }
 
 body.dark_theme .card,
 body.dark_theme .btn_icon,
 body.dark_theme textarea,
-body.dark_theme .popup_content {
+body.dark_theme .popup_content,
+body.dark_theme .CodeMirror,
+body.dark_theme .bookmarks_folder:hover,
+body.dark_theme .bookmark_single:hover,
+body.dark_theme .bookmarks_folder .folder_content {
     background: #333336 !important;
     color: #fff;
 }
 
-body.dark_theme .tasks_count {
+body.dark_theme .tasks_count,
+body.dark_theme .bookmarks_folder .bookmarks_folder:hover,
+body.dark_theme .bookmarks_folder .bookmark_single:hover {
     background: #444446 !important;
 }
 
 body.dark_theme .task_item,
 body.dark_theme textarea,
-body.dark_theme .setting_block div {
+body.dark_theme .setting_block div,
+body.dark_theme .CodeMirror {
     border: 1px solid #444446 !important;
 }
 
@@ -41,7 +48,9 @@ body.dark_theme input[type="checkbox"]:checked {
 
 body.dark_theme .card_title,
 body.dark_theme .popup_title,
-body.dark_theme .popup_subtitle {
+body.dark_theme .popup_subtitle,
+body.dark_theme .bookmarks_bar a,
+body.dark_theme .bookmarks_folder {
     color: #fff;
 }
 
@@ -97,7 +106,7 @@ a {
     flex-direction: column;
     justify-content: space-between;
     width: calc(100vw - 40px);
-    height: calc(100vh - 40px);
+    height: calc(100vh - 80px);
     margin: 20px;
 }
 
@@ -381,6 +390,87 @@ textarea,
     padding: 5px 10px;
     margin: 10px;
     color: #9197a3;
+}
+
+.bookmarks_bar {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+    font-size: 14px;
+}
+
+.bookmarks_bar a,
+.bookmarks_folder {
+    cursor: default;
+    color: #4a4a4a;
+}
+
+.bookmarks_bar img {
+    width: 16px;
+    height: 16px;
+}
+
+.bookmarks_folder img {
+    margin-right: 8px;
+}
+
+.bookmarks_folder,
+.bookmark_single {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    padding: 5px;
+}
+
+.bookmarks_folder:hover,
+.bookmark_single:hover {
+    background: #fff;
+    border-radius: 0;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.bookmarks_folder .bookmarks_folder,
+.bookmarks_folder .bookmark_single {
+    justify-content: flex-start;
+    width: calc(100% - 20px);
+    margin: 0;
+    padding: 5px 10px;
+}
+
+.bookmarks_folder .bookmarks_folder:hover,
+.bookmarks_folder .bookmark_single:hover {
+    background: #f6f6f6;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.bookmarks_folder .folder_content {
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: #fff;
+    padding: 6px 0;
+    border-radius: 0 6px 6px;
+    min-width: 220px;
+    position: absolute;
+    z-index: 100;
+    top: 24px;
+    left: 0;
+}
+
+.folder_content .folder_content {
+    top: 0;
+    left: 100px;
+}
+
+.bookmarks_folder:hover>.folder_content {
+    visibility: visible;
 }
 
 input[type="checkbox"] {

@@ -1,7 +1,9 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 
+import { Bookmark } from './components/Bookmark';
 import { authUser, tasksSync } from './functions/api';
 import './App.css';
 import svgAdd from './img/add.svg';
@@ -18,6 +20,7 @@ const App = () => {
 	const [formAuth, setFormAuth] = useState({ email: '', password: '' });
 	const [user, setUser] = useState({});
 	const [tasks, setTasks] = useState([]);
+	const [bookmarks, setBookmarks] = useState([]);
 	const [params, setParams] = useState({ columns: ['All', 'Today', 'Someday'] });
 	const [note, setNote] = useState('');
 	const [time, setTime] = useState(new Date().toLocaleTimeString().substr(0, 5));
@@ -59,6 +62,13 @@ const App = () => {
 		}
 
 		setInterval(onUpdateTime, 10000);
+
+		if (window.chrome.bookmarks) {
+			window.chrome.bookmarks.getTree((tree) => {
+				console.log(tree);
+				setBookmarks(tree[0].children);
+			});
+		}
 	}, []);
 
 	useEffect(() => {
@@ -169,6 +179,14 @@ const App = () => {
 					</div>
 				</div>
 			)}
+			{console.log(bookmarks)}
+			<div className="bookmarks_bar">
+				{bookmarks.length !== 0 && bookmarks[0].children.map((bookmarkFolder) => (
+					<>
+						<Bookmark bookmarkFolder={bookmarkFolder} />
+					</>
+				))}
+			</div>
 			{Object.keys(user).length === 0 ? (
 				<div className="container">
 					<div className="card">
