@@ -20,6 +20,7 @@ const App = () => {
 	const [formAuth, setFormAuth] = useState({ email: '', password: '' });
 	const [user, setUser] = useState({});
 	const [tasks, setTasks] = useState([]);
+	const [activeTask, setActiveTask] = useState([]);
 	const [bookmarks, setBookmarks] = useState([]);
 	const [params, setParams] = useState({ columns: ['All', 'Today', 'Someday'] });
 	const [note, setNote] = useState('');
@@ -29,8 +30,10 @@ const App = () => {
 		setLoader(true);
 		tasksSync(JSON.parse(localStorage.getItem('user')).auth_token).then((e) => {
 			setLoader(false);
-			setTasks(e.models.task.items);
-			localStorage.setItem('tasks', JSON.stringify(e.models.task.items));
+			const tasks = e.models.task.items;
+			tasks.sort((a, b) => b.lastUpdateDate - a.lastUpdateDate );
+			setTasks(tasks);
+			localStorage.setItem('tasks', JSON.stringify(tasks));
 		});
 	};
 
@@ -65,7 +68,6 @@ const App = () => {
 
 		if (window.chrome.bookmarks) {
 			window.chrome.bookmarks.getTree((tree) => {
-				console.log(tree);
 				setBookmarks(tree[0].children);
 			});
 		}
@@ -170,6 +172,26 @@ const App = () => {
 							</div>
 						</div>
 					)}
+					{popup.current === 'edit' && (
+						<div className="popup">
+							<div className="popup_close_panel" onClick={() => { onPopup(); }} />
+							<div className="popup_content">
+								<div className="popup_title title_group">
+									<span>Edit</span>
+									<span className="popup_close" onClick={() => { onPopup(); }}>
+										<img src={svgClose} alt="close" />
+									</span>
+								</div>
+								<div className="task_item">
+									<input type="checkbox" id={`task${activeTask.id}`} defaultChecked={activeTask.status !== 'UNCHECKED' && 'checked'} />
+									<label htmlFor={`task${activeTask.id}`} data-content={activeTask.title}>
+										{activeTask.title}
+									</label>
+								</div>
+								<div className="btn log_out">Coming soon</div>
+							</div>
+						</div>
+					)}
 				</>
 			)}
 			{loader && (
@@ -179,7 +201,6 @@ const App = () => {
 					</div>
 				</div>
 			)}
-			{console.log(bookmarks)}
 			<div className="bookmarks_bar">
 				{bookmarks.length !== 0 && bookmarks[0].children.map((bookmarkFolder) => (
 					<>
@@ -240,7 +261,7 @@ const App = () => {
 											<span>All</span>
 											<span className="tasks_count">{tasks.length}</span>
 										</div>
-										<div>
+										<div onClick={() => { onPopup(true, 'edit'); setActiveTask([]); }}>
 											<img className="btn_add" src={svgAdd} alt="add" />
 										</div>
 									</div>
@@ -249,9 +270,19 @@ const App = () => {
 											<div
 												key={task.id}
 												className="task_item"
+												onClick={() => { onPopup(true, 'edit'); setActiveTask(task); }}
 											>
-												<input type="checkbox" id={`task${task.id}`} defaultChecked={task.status !== 'UNCHECKED' && 'checked'} />
-												<label htmlFor={`task${task.id}`} data-content={task.title}>
+												<input
+													id={`task${task.id}`}
+													type="checkbox"
+													defaultChecked={task.status !== 'UNCHECKED' && 'checked'}
+													onClick={(e) => { e.stopPropagation(); }}
+												/>
+												<label
+													htmlFor={`task${task.id}`}
+													data-content={task.title}
+													onClick={(e) => { e.stopPropagation();}}
+												>
 													{task.title}
 												</label>
 											</div>
@@ -268,7 +299,7 @@ const App = () => {
 												{tasks !== 0 && tasks.filter((task) => task.dueDate && new Date(task.dueDate).toDateString() !== new Date().toDateString()).length}
 											</span>
 										</div>
-										<div>
+										<div onClick={() => { onPopup(true, 'edit'); setActiveTask([]); }}>
 											<img className="btn_add" src={svgAdd} alt="add" />
 										</div>
 									</div>
@@ -277,9 +308,19 @@ const App = () => {
 											<div
 												key={task.id}
 												className="task_item"
+												onClick={() => { onPopup(true, 'edit'); setActiveTask(task); }}
 											>
-												<input type="checkbox" id={`task${task.id}`} defaultChecked={task.status !== 'UNCHECKED' && 'checked'} />
-												<label htmlFor={`task${task.id}`} data-content={task.title}>
+												<input
+													id={`taskSomeday${task.id}`}
+													type="checkbox"
+													defaultChecked={task.status !== 'UNCHECKED' && 'checked'}
+													onClick={(e) => { e.stopPropagation(); }}
+												/>
+												<label
+													htmlFor={`taskSomeday${task.id}`}
+													data-content={task.title}
+													onClick={(e) => { e.stopPropagation();}}
+												>
 													{task.title}
 												</label>
 											</div>
@@ -296,7 +337,7 @@ const App = () => {
 												{tasks !== 0 && tasks.filter((task) => new Date(task.dueDate).toDateString() === new Date().toDateString()).length}
 											</span>
 										</div>
-										<div>
+										<div onClick={() => { onPopup(true, 'edit'); setActiveTask([]); }}>
 											<img className="btn_add" src={svgAdd} alt="add" />
 										</div>
 									</div>
@@ -305,9 +346,19 @@ const App = () => {
 											<div
 												key={task.id}
 												className="task_item"
+												onClick={() => { onPopup(true, 'edit'); setActiveTask(task); }}
 											>
-												<input type="checkbox" id={`task${task.id}`} defaultChecked={task.status !== 'UNCHECKED' && 'checked'} />
-												<label htmlFor={`task${task.id}`} data-content={task.title}>
+												<input
+													id={`taskToday${task.id}`}
+													type="checkbox"
+													defaultChecked={task.status !== 'UNCHECKED' && 'checked'}
+													onClick={(e) => { e.stopPropagation(); }}
+												/>
+												<label
+													htmlFor={`taskToday${task.id}`}
+													data-content={task.title}
+													onClick={(e) => { e.stopPropagation();}}
+												>
 													{task.title}
 												</label>
 											</div>
@@ -319,9 +370,6 @@ const App = () => {
 								<div className="card">
 									<div className="card_title title_group">
 										<span>Note</span>
-										<span>
-											<img className="btn_add" src={svgNote} style={{ cursor: 'default' }} alt="add" />
-										</span>
 									</div>
 									<div className="card_content">
 										<textarea
@@ -335,9 +383,6 @@ const App = () => {
 								<div className="card">
 									<div className="card_title title_group">
 										<span>Markdown</span>
-										<span>
-											<img className="btn_add" src={svgNote} style={{ cursor: 'default' }} alt="add" />
-										</span>
 									</div>
 									<div className="card_content">
 										<SimpleMDE
