@@ -399,7 +399,6 @@ textarea,
     align-items: center;
     margin-left: 5px;
     font-size: 14px;
-    overflow: auto;
 }
 
 .bookmarks_bar a,
@@ -427,8 +426,8 @@ textarea,
     padding: 5px;
 }
 
-.bookmark_single {
-    min-width: 110px;
+.bookmark_single span {
+    max-width: 110px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

@@ -25,7 +25,7 @@ export const Bookmark = ({ bookmarkFolder }) => (
 					alt="favicon"
 					style={bookmarkFolder.title.length !== 0 ? { marginRight: '8px' } : {}}
 				/>
-				{bookmarkFolder.title}
+				<span>{bookmarkFolder.title}</span>
 			</a>
 		)}
 	</>
